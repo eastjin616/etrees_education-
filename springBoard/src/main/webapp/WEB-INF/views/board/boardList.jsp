@@ -50,6 +50,7 @@
 			</table>
 		</td>
 	</tr>
+	
 	<tr>
 		<td align="right">
 			<a href ="/board/boardWrite.do">±Û¾²±â</a>

@@ -47,6 +47,8 @@
 </script>
 <body>
 <form class="boardUpdate">
+<input type="hidden" name="boardNum" value="${board.boardNum}">
+<input type="hidden" name="boardType" value="${board.boardType}">
 	<table align="center">
 		<tr>
 			<td align="right">
@@ -57,9 +59,6 @@
 			<td>
 				<table border ="1"> 
 					<tr>
-						
-						<input type="hidden" name="boardNum" value="${board.boardNum}">
-    					<input type="hidden" name="boardType" value="${board.boardType}">
 					
 						<td width="120" align="center">
 						Title

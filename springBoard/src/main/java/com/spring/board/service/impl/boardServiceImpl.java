@@ -59,11 +59,16 @@ public class boardServiceImpl implements boardService{
 	}
 
 	@Override
-	public void boardDelete(int boardNum) {
+	public int boardDelete(int boardNum) {
 		// TODO Auto-generated method stub
-		boardDao.boardDelete(boardNum);
+		return boardDao.boardDelete(boardNum);
 	}
 	
+//=================MBTI 질문조회========================
+	@Override
+	public List<BoardVo> selectBoardList1(PageVo pageVo) throws Exception {
 	
-	
+		return boardDao.selectBoardList1(pageVo);
+	}
+
 }

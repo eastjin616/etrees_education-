@@ -19,6 +19,8 @@ public interface boardService {
 	
 	public int boardUpdate(BoardVo boardVo) throws Exception;
 	
-	public void boardDelete(int boardNum);
+	public int boardDelete(int boardNum);
+	
+	public List<BoardVo> selectBoardList1(PageVo pageVo) throws Exception;
 
 }

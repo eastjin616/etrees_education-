@@ -80,11 +80,33 @@
 		UPDATE BOARD
 		SET BOARD_TITLE = #{boardTitle},
 		    BOARD_COMMENT = #{boardComment}
-		WHERE BOARD_TYPE = 1
+		WHERE BOARD_TYPE = #{boardType}
 		  AND BOARD_NUM = #{boardNum}
 	</update>
 	
 	<delete id="boardDelete">
 		DELETE FROM BOARD WHERE BOARD_NUM = #{boardNum}
 	</delete>
+	
+	<select id="mbtiList" parameterType="com.spring.board.vo.PageVo" resultType="com.spring.board.vo.BoardVo">
+	    SELECT *
+	    FROM (
+	        SELECT ROWNUM AS rnum, b.*
+	        FROM (
+	            SELECT 
+	                board_num AS boardNum,
+	                board_comment AS boardComment,
+	                board_type AS boardType   <!-- ✅ 추가 -->
+	            FROM board
+	            ORDER BY board_num
+	        ) b
+	        WHERE ROWNUM &lt;= #{endRow}
+	    )
+	    WHERE rnum &gt;= #{startRow}
+	</select>
+
+
+
+	
+	
 </mapper>

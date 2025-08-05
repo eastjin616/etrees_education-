@@ -19,5 +19,7 @@ public interface BoardDao {
 
 	public int boardUpdate(BoardVo boardVo);
 	
-	public void boardDelete(int boardNum);
+	public int boardDelete(int boardNum);
+	
+	public List<BoardVo> selectBoardList1(PageVo pageVo) throws Exception;
 }

@@ -60,9 +60,15 @@ public class BoardDaoImpl implements BoardDao{
 	
 	}
 	@Override
-	public void boardDelete(int boardNum) {
+	public int boardDelete(int boardNum) {
 		// TODO Auto-generated method stub
-		sqlSession.delete("board.boardDelete", boardNum);
+		return sqlSession.delete("board.boardDelete", boardNum);
+	}
+	
+//=================MBTI 질문조회========================
+	@Override
+	public List<BoardVo> selectBoardList1(PageVo pageVo) throws Exception {
+	    return sqlSession.selectList("board.mbtiList",pageVo);
 	}
 	
 	
