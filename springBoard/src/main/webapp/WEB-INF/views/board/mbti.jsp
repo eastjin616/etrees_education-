@@ -11,7 +11,6 @@
         margin-bottom: 15px;
         padding: 10px;
         border: 1px solid #ddd;
-        background: #f9f9f9;
     }
     .optional label {
         margin-right: 10px;
@@ -19,24 +18,18 @@
 </style>
 </head>
 <body>
-
 	<div class="title">
 		 MBTI 검사
 	<div>
 	<br>
-
-<form action="/board/mbtiAction.do" method="POST">
-
-
-
+<!-- <form action="/board/mbtiAction.do" method="POST"> -->
+<form action="/mbti/mbtiAction.do" method="POST">
 	<c:forEach var="board" items="${boardList}">
 		<div class="question">
 		    ${board.boardComment}
 		</div>
-
 		<input type="hidden" name="type_${board.boardNum}" value="${board.boardType}">
-		<input type="hidden" name="boardNum" value="${board.boardNum}">
-	
+		<input type="hidden" name="boardNum_${board.boardNum}" value="${board.boardNum}">
 	    <div class="optional">
 	    <span>그렇다</span>
 	        <label><input type="radio" name="option_${board.boardNum}" value="1" required></label>
@@ -48,13 +41,9 @@
 	        <label><input type="radio" name="option_${board.boardNum}" value="7" required>아니다</label>
 	    </div>
 	    <br>
-	
-
-	
-</c:forEach>
-
-	<input type="hidden" name="page" value="${curtPage}">
-    <input type="submit" value="${curtPage == maxPages ? '제출' : '다음'}">
+	</c:forEach>
+	<input type="hidden" id="pageNo" name="pageNo" value="${pageNo}">
+    <input type="submit" value="${pageNo eq 4 ? '제출' : '다음'}">
 </form>
 
 </body>

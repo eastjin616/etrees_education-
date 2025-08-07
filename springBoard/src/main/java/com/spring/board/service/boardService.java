@@ -3,6 +3,7 @@ package com.spring.board.service;
 import java.util.List;
 
 import com.spring.board.vo.BoardVo;
+import com.spring.board.vo.CodeVo;
 import com.spring.board.vo.PageVo;
 
 public interface boardService {
@@ -21,6 +22,8 @@ public interface boardService {
 	
 	public int boardDelete(int boardNum);
 	
-	public List<BoardVo> selectBoardList1(PageVo pageVo) throws Exception;
+	public List<BoardVo> selectMbtiList(BoardVo boardVo);
+	
+	public List<BoardVo> checkBoxResult(List<String> types);
 
 }

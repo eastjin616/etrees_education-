@@ -3,6 +3,7 @@ package com.spring.board.dao;
 import java.util.List;
 
 import com.spring.board.vo.BoardVo;
+import com.spring.board.vo.CodeVo;
 import com.spring.board.vo.PageVo;
 
 public interface BoardDao {
@@ -21,5 +22,7 @@ public interface BoardDao {
 	
 	public int boardDelete(int boardNum);
 	
-	public List<BoardVo> selectBoardList1(PageVo pageVo) throws Exception;
+	public List<BoardVo> selectMbtiList(BoardVo boardVo);
+
+	public List<BoardVo> checkBoxResult(List<String> types);
 }

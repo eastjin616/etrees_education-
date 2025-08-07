@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="code">
+    
+    <resultMap id="codeVo" type="com.spring.board.vo.CodeVo">
+        <result property="codeType" column="CODE_TYPE"/>
+        <result property="codeId" column="CODE_ID"/>
+        <result property="codeName" column="CODE_NAME"/>
+        <result property="creator" column="CREATOR"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="modifier" column="MODIFIER"/>
+        <result property="modifiedTime" column="MODIFIED_TIME"/>
+    </resultMap>
+    
+    <select id="CodeListByType" resultMap="codeVo" parameterType="String">
+         SELECT CODE_ID as codeId, CODE_NAME as codeName, CODE_TYPE as codeType
+	       FROM COM_CODE
+	      WHERE CODE_TYPE = #{codeType}
+    </select>
+    
+    
+</mapper>

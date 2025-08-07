@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.board.dao.BoardDao;
 import com.spring.board.vo.BoardVo;
+import com.spring.board.vo.CodeVo;
 import com.spring.board.vo.PageVo;
 
 @Repository
@@ -61,15 +62,24 @@ public class BoardDaoImpl implements BoardDao{
 	}
 	@Override
 	public int boardDelete(int boardNum) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stubtjq
 		return sqlSession.delete("board.boardDelete", boardNum);
 	}
 	
 //=================MBTI 질문조회========================
+	
 	@Override
-	public List<BoardVo> selectBoardList1(PageVo pageVo) throws Exception {
-	    return sqlSession.selectList("board.mbtiList",pageVo);
+	public List<BoardVo> selectMbtiList(BoardVo boardVo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("board.selectMbtiList",boardVo);
 	}
 	
+//======================TYPE list조회=========================
 	
+	@Override
+	public List<BoardVo> checkBoxResult(List<String> types) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("board.checkBoxResult",types);
+	}
+
 }

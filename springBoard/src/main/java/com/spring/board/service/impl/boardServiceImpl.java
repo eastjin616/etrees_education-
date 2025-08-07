@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.spring.board.dao.BoardDao;
 import com.spring.board.service.boardService;
 import com.spring.board.vo.BoardVo;
+import com.spring.board.vo.CodeVo;
 import com.spring.board.vo.PageVo;
 
 @Service
@@ -65,10 +66,17 @@ public class boardServiceImpl implements boardService{
 	}
 	
 //=================MBTI 질문조회========================
-	@Override
-	public List<BoardVo> selectBoardList1(PageVo pageVo) throws Exception {
 	
-		return boardDao.selectBoardList1(pageVo);
+	@Override
+	public List<BoardVo> selectMbtiList(BoardVo boardVo) {
+		return boardDao.selectMbtiList(boardVo);
+	}
+//======================TYPE list조회=========================
+
+	@Override
+	public List<BoardVo> checkBoxResult(List<String> types) {
+		// TODO Auto-generated method stub
+		return boardDao.checkBoxResult(types);
 	}
 
 }

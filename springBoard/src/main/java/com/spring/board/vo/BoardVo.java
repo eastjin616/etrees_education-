@@ -1,6 +1,8 @@
 package com.spring.board.vo;
 
-public class BoardVo {
+import java.util.List;
+
+public class BoardVo extends PageVo {
 	
 	private String 	boardType;
 	private int 	boardNum;
@@ -9,6 +11,10 @@ public class BoardVo {
 	private String 	creator;
 	private String	modifier;
 	private int totalCnt;
+	
+	private String boardTypeName;
+	
+//	private List<String> boardTypeList;
 	
 	
 	public int getTotalCnt() {
@@ -53,6 +59,25 @@ public class BoardVo {
 	public void setModifier(String modifier) {
 		this.modifier = modifier;
 	}
+	
+	
+	
+	public String getboardTypeName() {
+		return boardTypeName;
+	}
+	public void setboardTypeName(String boardTypeName) {
+		this.boardTypeName = boardTypeName;
+	}
+	
+//
+//	public List<String> getBoardTypeList() {
+//	    return boardTypeList;
+//	}
+//
+//	public void setBoardTypeList(List<String> boardTypeList) {
+//	    this.boardTypeList = boardTypeList;
+//	}
+
 	
 	
 }

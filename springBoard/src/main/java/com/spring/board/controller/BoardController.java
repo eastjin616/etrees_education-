@@ -28,7 +28,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.board.HomeController;
 import com.spring.board.service.boardService;
+import com.spring.board.service.codeService;
 import com.spring.board.vo.BoardVo;
+import com.spring.board.vo.CodeVo;
 import com.spring.board.vo.PageVo;
 import com.spring.common.CommonUtil;
 
@@ -37,6 +39,9 @@ public class BoardController {
 	
 	@Autowired 
 	boardService boardService;
+	
+	@Autowired
+	private codeService codeService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
@@ -80,8 +85,10 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/board/boardWrite.do", method = RequestMethod.GET)
-	public String boardWrite(Locale locale, Model model) throws Exception{
+	public String boardWrite(Model model) throws Exception{
 		
+		List<CodeVo> codeList = codeService.codeListByType("menu");
+	    model.addAttribute("codeList", codeList);
 		
 		return "board/boardWrite";
 	}
@@ -94,6 +101,8 @@ public class BoardController {
 		CommonUtil commonUtil = new CommonUtil();
 		
 		int resultCnt = boardService.boardInsert(boardVo);
+		
+		System.out.println("boardType: " + boardVo.getBoardType()); // null이면 문제!
 		
 		result.put("success", (resultCnt > 0)?"Y":"N");
 		String callbackMsg = commonUtil.getJsonCallBackString(" ",result);
@@ -149,127 +158,30 @@ public class BoardController {
 	    	 return "/board/boardUpdateAction.do"; 
 	    }
 	}
-	//====================================MBTI 질문 페이지=============================== 
-	//====================================MBTI 질문 페이지=============================== 
-	//====================================MBTI 질문 페이지=============================== 
-	@RequestMapping(value="/board/mbti.do", method = RequestMethod.GET)
-	public String mbtiBoard(Locale locale, Model model,
-	         @RequestParam(value="page", defaultValue="1") int page,
-	         PageVo pageVo) throws Exception {
 
-	    pageVo.setPageNo(page);
-	    pageVo.setPageSize(5);
+	//======================check 박스=========================
 
-	    List<BoardVo> boardList = boardService.selectBoardList1(pageVo);
-
-	    int totalCnt = boardService.selectBoardCnt();
-	    int maxPages = (int) Math.ceil((double) totalCnt / pageVo.getPageSize());
-
-	    model.addAttribute("boardList", boardList);
-	    model.addAttribute("curtPage", page);     
-	    model.addAttribute("maxPages", maxPages); 
-
-	    return "board/mbti";
-	}
-
-	//====================================답변 제출=============================== 
-	@RequestMapping(value="/board/mbtiAction.do", method = RequestMethod.POST)
-	public String mbtiActionBoard(HttpServletRequest request,
-	                               @RequestParam("page") int page,
-	                               HttpSession session) {
-
-	    Map<String, Integer> scores = (Map<String, Integer>) session.getAttribute("scores");
-	    if (scores == null) {
-	        scores = new HashMap<>();
-	        scores.put("E", 0); scores.put("I", 0);
-	        scores.put("N", 0); scores.put("S", 0);
-	        scores.put("F", 0); scores.put("T", 0);
-	        scores.put("J", 0); scores.put("P", 0);
-	    }
-
-	    Map<String, String[]> params = request.getParameterMap();
-	    for (Map.Entry<String, String[]> entry : params.entrySet()) {
-	        if (entry.getKey().startsWith("option_")) {
-	            int boardNum = Integer.parseInt(entry.getKey().substring("option_".length()));
-	            int value = Integer.parseInt(entry.getValue()[0]);
-	            String type = request.getParameter("type_" + boardNum);
-	            calculateScore(scores, type, value);
-	        }
-	    }
-
-	    // 세션에 점수 저장 후...
-	    session.setAttribute("scores", scores);
-
-	    // 4페이지에서 최종 계산
-	    if (page == 4) {
-	        String result = (scores.get("E") >= scores.get("I") ? "E" : "I")
-	                      + (scores.get("N") >= scores.get("S") ? "N" : "S")
-	                      + (scores.get("F") >= scores.get("T") ? "F" : "T")
-	                      + (scores.get("J") >= scores.get("P") ? "J" : "P");
-
-	        // 점수 초기화
-	        session.removeAttribute("scores");
-
-	        session.setAttribute("mbtiResult", result);
-	        return "redirect:/board/mbtiResult.do";
-	    }
-
-	    // 4페이지 아니면 page+1로 넘어가기
-	    return "redirect:/board/mbti.do?page=" + (page + 1);
+	@RequestMapping("/board/checkBoxShow.do")
+	@ResponseBody
+	public List<CodeVo> checkBoxShow() {
+	    return codeService.codeListByType("menu");
 	}
 	
-	//====================================점수 계산 메서드=============================== 
-	private void calculateScore(Map<String, Integer> scores, String type, int value) {
-	    int fScore = 0;
-	    int bScore = 0;
-
-	    switch (value) {
-	        case 1: fScore = 3; break;
-	        case 2: fScore = 2; break;
-	        case 3: fScore = 1; break;
-	        case 4: fScore = 0; bScore = 0; break;
-	        case 5: bScore = 1; break;
-	        case 6: bScore = 2; break;
-	        case 7: bScore = 3; break;
-	    }
-
-	    switch (type) {
-	        case "EI":
-	            scores.put("E", scores.get("E") + fScore);
-	            scores.put("I", scores.get("I") + bScore);
-	            break;
-	        case "NS":
-	            scores.put("N", scores.get("N") + fScore);
-	            scores.put("S", scores.get("S") + bScore);
-	            break;
-	        case "FT":
-	            scores.put("F", scores.get("F") + fScore);
-	            scores.put("T", scores.get("T") + bScore);
-	            break;
-	        case "JP":
-	            scores.put("J", scores.get("J") + fScore);
-	            scores.put("P", scores.get("P") + bScore);
-	            break;
-	    }
+	//======================TYPE list조회=========================
+	
+	@RequestMapping("/board/checkBoxResult.do")
+	@ResponseBody
+	public List<BoardVo> checkBoxResult(@RequestParam("types[]") List<String> types) {
 	    
-	    System.out.println("타입입 " + type + ", 벨류류" + value);
-	    System.out.println("점수수 " + scores);
+		System.out.println("여기까지 왔니???");
+		
+		return boardService.checkBoxResult(types);
 	}
-
-
-	//====================================결과 페이지=============================== 
-	@RequestMapping(value="/board/mbtiResult.do", method = RequestMethod.GET)
-	public String mbtiResult(HttpSession session, Model model) {
-	    System.out.println("=== MBTI 리절트 실행됨 ===");
-	    String result = (String) session.getAttribute("mbtiResult");
-	    model.addAttribute("mbtiResult", result);
-	    return "board/mbtiResult";
-	}
-
-
 	
 
 }
+	
+
 
 
 
