@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.codehaus.jackson.JsonProcessingException;
@@ -169,14 +170,48 @@ public class BoardController {
 	
 	//======================TYPE list조회=========================
 	
+//	@RequestMapping("/board/checkBoxResult.do")
+//	@ResponseBody
+//	public List<BoardVo> checkBoxResult(@RequestParam("types[]") List<String> types) {
+//	    
+//		System.out.println("여기까지 왔니???");
+//		
+//		return boardService.checkBoxResult(types);
+//	}
+	
 	@RequestMapping("/board/checkBoxResult.do")
 	@ResponseBody
-	public List<BoardVo> checkBoxResult(@RequestParam("types[]") List<String> types) {
+	public List<BoardVo> checkBoxResult(
+	    @RequestParam(value = "types[]", required = false) List<String> types,
+	    @RequestParam(value = "pageNo", required = false) String pageNoStr
+	) {
+	    int pageNo = 1;
+	    try {
+	        if (pageNoStr != null && !pageNoStr.isBlank()) {
+	            pageNo = Integer.parseInt(pageNoStr.trim());
+	        }
+	    } catch (NumberFormatException e) {
+	        pageNo = 1;
+	    }
+
+	    PageVo pageVo = new PageVo();
+	    pageVo.setPageNo(pageNo);
+	    pageVo.setBoardTypeList(types);
 	    
-		System.out.println("여기까지 왔니???");
-		
-		return boardService.checkBoxResult(types);
+	    System.out.println("최종 boardTypeList: " + pageVo.getBoardTypeList());
+ 
+	    return boardService.checkBoxResult(pageVo);
 	}
+
+
+
+
+
+
+
+
+
+
 	
 
 }

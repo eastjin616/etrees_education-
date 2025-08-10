@@ -1,6 +1,7 @@
 package com.spring.board.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,10 +74,15 @@ public class boardServiceImpl implements boardService{
 	}
 //======================TYPE list조회=========================
 
+//	@Override
+//	public List<BoardVo> checkBoxResult(List<String> types) {
+//		// TODO Auto-generated method stub
+//		return boardDao.checkBoxResult(types);
+//	}
+	
 	@Override
-	public List<BoardVo> checkBoxResult(List<String> types) {
+	public List<BoardVo> checkBoxResult(PageVo pageVo) {
 		// TODO Auto-generated method stub
-		return boardDao.checkBoxResult(types);
+		return boardDao.checkBoxResult(pageVo);
 	}
-
 }

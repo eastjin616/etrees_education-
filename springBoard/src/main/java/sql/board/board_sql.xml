@@ -12,30 +12,38 @@
     	<result property="boardTypeName" column="BOARD_TYPE_NAME"/>
     </resultMap>
     
-<select id="boardList" parameterType="com.spring.board.vo.PageVo" resultMap="boardVo">
-    SELECT 
-        b.BOARD_TYPE,
-        b.BOARD_NUM,
-        b.BOARD_TITLE,
-        b.BOARD_COMMENT,
-        c.CODE_NAME AS BOARD_TYPE_NAME, 
-        TOTAL_CNT
-    FROM (
-        SELECT
-            BOARD_TYPE,
-            BOARD_NUM,
-            BOARD_TITLE,
-            BOARD_COMMENT,
-            ROW_NUMBER() OVER (ORDER BY BOARD_NUM DESC) AS NUMROW,
-            COUNT(*) OVER() AS TOTAL_CNT
-        FROM BOARD
-    ) b
-    LEFT JOIN COM_CODE c ON b.BOARD_TYPE = c.CODE_ID
-    WHERE c.CODE_TYPE = 'menu'
-      AND NUMROW BETWEEN (#{pageNo} - 1) * 10 + 1 AND (#{pageNo}) * 10
-</select>
+	<select id="boardList" parameterType="com.spring.board.vo.PageVo" resultMap="boardVo">
+		SELECT 
+		    b.BOARD_TYPE,
+		    b.BOARD_NUM,
+		    b.BOARD_TITLE,
+		    b.BOARD_COMMENT,
+		    c.CODE_NAME AS BOARD_TYPE_NAME, 
+		    TOTAL_CNT
+		FROM (
+		    SELECT
+		        BOARD_TYPE,
+		        BOARD_NUM,
+		        BOARD_TITLE,
+		        BOARD_COMMENT,
+		        ROW_NUMBER() OVER (ORDER BY BOARD_NUM DESC) AS NUMROW,
+		        COUNT(*) OVER() AS TOTAL_CNT
+		    FROM BOARD
+		    <where>
+		      <if test="boardTypeList != null and boardTypeList.size() > 0">
+		        AND BOARD_TYPE IN
+		        <foreach item="type" collection="boardTypeList" open="(" separator="," close=")">
+		          #{type}
+		        </foreach>
+		      </if>
+		    </where>
+		) b
+		LEFT JOIN COM_CODE c ON b.BOARD_TYPE = c.CODE_ID
+		WHERE c.CODE_TYPE = 'menu'
+		AND NUMROW BETWEEN (#{pageNo} - 1) * 10 + 1 AND #{pageNo} * 10
+		
+	</select>
 
-    
     <select id="boardTotal" parameterType="Integer" resultType="Integer">
 		  SELECT
 		      	COUNT(*) AS TOTAL_CNT
@@ -55,35 +63,35 @@
     	AND 	BOARD_NUM  = #{boardNum}
     </select>	
     
-<insert id="boardInsert" parameterType="com.spring.board.vo.BoardVo">
-
-    <!-- 1. INSERT 전에 boardNum을 미리 계산해서 boardVo.setBoardNum()에 담김 GPT돌림 자꾸 에러뜨길래... -->
-    <selectKey keyProperty="boardNum" resultType="int" order="BEFORE">
-        SELECT NVL(MAX(BOARD_NUM), 0) + 1 
-        FROM BOARD
-        WHERE BOARD_TYPE = #{boardType}
-    </selectKey>
-
-    INSERT INTO BOARD (
-        BOARD_TYPE,
-        BOARD_NUM,
-        BOARD_TITLE,
-        BOARD_COMMENT,
-        CREATOR,
-        CREATE_TIME,
-        MODIFIER,
-        MODIFIED_TIME
-    ) VALUES (
-        #{boardType},
-        #{boardNum},
-        #{boardTitle},
-        #{boardComment},
-        'SYSTEM',
-        TO_CHAR(SYSDATE),
-        'SYSTEM',
-        TO_CHAR(SYSDATE)
-    )
-</insert>
+	<insert id="boardInsert" parameterType="com.spring.board.vo.BoardVo">
+	
+	    <!-- 1. INSERT 전에 boardNum을 미리 계산해서 boardVo.setBoardNum()에 담김 GPT돌림 자꾸 에러뜨길래... -->
+	    <selectKey keyProperty="boardNum" resultType="int" order="BEFORE">
+	        SELECT NVL(MAX(BOARD_NUM), 0) + 1 
+	        FROM BOARD
+	        WHERE BOARD_TYPE = #{boardType}
+	    </selectKey>
+	
+	    INSERT INTO BOARD (
+	        BOARD_TYPE,
+	        BOARD_NUM,
+	        BOARD_TITLE,
+	        BOARD_COMMENT,
+	        CREATOR,
+	        CREATE_TIME,
+	        MODIFIER,
+	        MODIFIED_TIME
+	    ) VALUES (
+	        #{boardType},
+	        #{boardNum},
+	        #{boardTitle},
+	        #{boardComment},
+	        'SYSTEM',
+	        TO_CHAR(SYSDATE),
+	        'SYSTEM',
+	        TO_CHAR(SYSDATE)
+	    )
+	</insert>
 
     
      <update id="boardUpdate" parameterType="com.spring.board.vo.BoardVo">    
@@ -106,23 +114,6 @@
 		 WHERE board_type in('EI','IE','NS','SN','FT','TF','JP','PJ')
 		   AND board_num BETWEEN #{startRow} AND #{endRow}
 		 ORDER BY board_num
-	</select>
-	
-	<select id="checkBoxResult" parameterType="com.spring.board.vo.BoardVo" resultType="com.spring.board.vo.BoardVo">
-		SELECT
-			BOARD_TYPE AS boardType,
-			BOARD_NUM AS boardNum,
-			BOARD_TITLE AS boardTitle,
-			BOARD_COMMENT AS boardComment,
-			CODE_NAME AS boardTypeName        
-		FROM BOARD 
-		JOIN COM_CODE ON (BOARD_TYPE = CODE_ID) 
-		WHERE BOARD_TYPE IN
-		<foreach item="type" collection="list" open="(" separator="," close=")">
-			#{type}
-		</foreach>
-		ORDER BY 2 DESC
-
 	</select>
 
 </mapper>

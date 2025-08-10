@@ -1,17 +1,26 @@
 package com.spring.board.vo;
 
+import java.util.List;
+
 public class PageVo {
 	
-	private int pageNo = 1;
+	private Integer pageNo = 1;
 	private int pageSize = 5;
 	private int startIndex; 
     private int endIndex;  
     private int startRow;
     private int endRow;
-	public int getPageNo() {
+    
+	private String boardTypeName;
+
+	private List<String> boardTypeList;
+	
+    
+//	===========================
+	public Integer getPageNo() {
 		return pageNo;
 	}
-	public void setPageNo(int pageNo) {
+	public void setPageNo(Integer  pageNo) {
 		this.pageNo = pageNo;
 	}
 	public int getPageSize() {
@@ -44,6 +53,24 @@ public class PageVo {
 	public void setEndRow(int endRow) {
 		this.endRow = endRow;
 	}
+	
+	public String getboardTypeName() {
+		return boardTypeName;
+	}
+	public void setboardTypeName(String boardTypeName) {
+		this.boardTypeName = boardTypeName;
+	}
+	
+
+	public List<String> getBoardTypeList() {
+	    return boardTypeList;
+	}
+
+	public void setBoardTypeList(List<String> boardTypeList) {
+	    this.boardTypeList = boardTypeList;
+	}
+
+
 
 //	public int getPageNo() {
 //		return pageNo;
@@ -67,6 +94,6 @@ public class PageVo {
 //    public int getEndRow() {
 //        return pageNo * pageSize;
 //    }
-    
+ 
 	
 }

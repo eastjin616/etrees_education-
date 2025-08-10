@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+    pageEncoding="UTF-8"%>
 <%@include file="/WEB-INF/views/common/common.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>list</title>
 </head>
+
+
 <script type="text/javascript">
 
 	$j.ajax({
@@ -23,9 +25,6 @@
 			});
 			$j("#checkboxContainer").html(html);
 		},
-		error : function(err){
-			console.log("¿À·ù")
-		}
 	})
 	
 	$j(document).ready(function() {
@@ -53,22 +52,22 @@
 
 	$j(document).ready(function() {	
 		$j("#whichOne").click(function(){
-			console.log("Á¶È¸ µÇ³Ä");
+			console.log("ì¡°íšŒ ë˜ëƒ");
 			let chooseType = [];
 			
 			$j("input[name=type]:checked").each(function(){
 				chooseType.push($j(this).val());
 			})
 			
-			console.log("¼±ÅÃµÈ °ª:", chooseType);  // ¡ç ¿©±â ²À Âï¾îºÁ!
+			console.log("ì„ íƒëœ ê°’:", chooseType); 
 			
 			$j.ajax({
 				url: "/board/checkBoxResult.do",
 				method: "GET",
-				data: { types: chooseType },
+				data: { types: chooseType},
 				dataType: "json",
 				success: function(data){
-					console.log("¹ŞÀº µ¥ÀÌÅÍ:", data);
+					console.log("ë°›ì€ ë°ì´í„°:", data);
 					
 					let html = "";
 					$j.each(data, function(i, item) {
@@ -79,8 +78,8 @@
 						html += "</tr>";
 					});
 					
-					$j("#boardTable tr:gt(0)").remove(); // Çì´õ ¿Ü ±âÁ¸ Çà »èÁ¦
-					$j("#boardTable").append(html);      // »õ·Î¿î Çà Ãß°¡
+					$j("#boardTable tr:gt(0)").remove(); // ë§¨ìœ„ ì™¸ì— ê¸°ì¡´ í–‰ ì‚­ì œ
+					$j("#boardTable").append(html);      // ìƒˆë¡œìš´ í–‰ ì–´íŒ¬ë“œ
 				}
 				
 			})
@@ -133,15 +132,16 @@
 	
 	<tr>
 		<td align="right">
-			<a href ="/board/boardWrite.do">±Û¾²±â</a>
+			<a href ="/board/boardWrite.do">ê¸€ì“°ê¸°</a>
 		</td>
 	</tr>
 	
 	<tr>
 		<td>
-			<form id="filterForm"><input type="checkbox" id="checkAll"> ÀüÃ¼
+			<form id="filterForm" style="display: flex; align-items: center; gap: 10px;">
+			<input type="checkbox" id="checkAll"> ì „ì²´
 				<div id="checkboxContainer"></div>
-				<button type="button" id="whichOne">Á¶È¸</button>
+				<button type="button" id="whichOne">ì¡°íšŒ</button>
 			</form>
 		</td>
 	</tr>

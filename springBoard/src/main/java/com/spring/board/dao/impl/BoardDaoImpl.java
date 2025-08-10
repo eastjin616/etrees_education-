@@ -1,6 +1,7 @@
 package com.spring.board.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,10 +77,19 @@ public class BoardDaoImpl implements BoardDao{
 	
 //======================TYPE list조회=========================
 	
+//	@Override
+//	public List<BoardVo> checkBoxResult(List<String> types) {
+//		// TODO Auto-generated method stub
+//		return sqlSession.selectList("board.boardList",types);
+//	}
+	
 	@Override
-	public List<BoardVo> checkBoxResult(List<String> types) {
+	public List<BoardVo> checkBoxResult(PageVo pageVo) {
 		// TODO Auto-generated method stub
-		return sqlSession.selectList("board.checkBoxResult",types);
+		
+		System.out.println("DAO - list: " + pageVo.getBoardTypeList());
+
+		return sqlSession.selectList("board.boardList",pageVo);
 	}
 
 }

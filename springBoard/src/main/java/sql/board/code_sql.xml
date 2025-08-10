@@ -13,7 +13,7 @@
     </resultMap>
     
     <select id="CodeListByType" resultMap="codeVo" parameterType="String">
-         SELECT CODE_ID as codeId, CODE_NAME as codeName, CODE_TYPE as codeType
+         SELECT CODE_ID, CODE_NAME, CODE_TYPE
 	       FROM COM_CODE
 	      WHERE CODE_TYPE = #{codeType}
     </select>

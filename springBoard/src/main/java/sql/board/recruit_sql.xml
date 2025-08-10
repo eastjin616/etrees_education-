@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="recruit">
+    
+<resultMap id="RecruitMap" type="com.spring.board.vo.RecruitVo">
+  <id     property="seq"      column="SEQ"/>
+  <result property="name"     column="NAME"/>
+  <result property="birth"    column="BIRTH"/>
+  <result property="gender"   column="GENDER"/> 
+  <result property="phone"    column="PHONE"/>
+  <result property="email"    column="EMAIL"/>
+  <result property="address"  column="ADDR"/>
+  <result property="hopeArea" column="LOCATION"/>
+  <result property="jobType"  column="WORK_TYPE"/>
+</resultMap>
+
+
+  
+<!-- 기존: <selectKey .../> 사용 -->
+<insert id="newRecruit" parameterType="map">
+  INSERT INTO RECRUIT (SEQ, NAME, PHONE)
+  VALUES (RECRUIT_SEQ.NEXTVAL, #{name}, #{phone})
+</insert>
+
+  
+<select id="findByNameAndPhone" parameterType="map" resultType="com.spring.board.vo.RecruitVo">
+  SELECT SEQ, NAME, BIRTH, GENDER, PHONE, EMAIL,
+         ADDR AS address,
+         LOCATION AS hopeArea,
+         WORK_TYPE AS jobType
+  FROM RECRUIT
+  WHERE NAME = #{name}
+    AND PHONE = #{phone}
+</select>
+
+
+
+<!-- 부모 업데이트 : parameterType=map (submit 포함) -->
+<update id="updateRecruit" parameterType="map">
+  UPDATE RECRUIT
+     SET NAME      = #{name},
+         BIRTH     = #{birth},
+         GENDER    = #{gender},
+         PHONE     = #{phone},
+         EMAIL     = #{email},
+         ADDR      = #{address},
+         LOCATION  = #{hopeArea},
+         WORK_TYPE = #{jobType},
+         SUBMIT    = #{submit}
+   WHERE SEQ = #{seq}
+</update>
+
+<!-- 자식 조회 (컬럼 alias로 VO 프로퍼티와 1:1 매칭) -->
+<select id="selectEducations" parameterType="long" resultType="com.spring.board.vo.EducationVo">
+  SELECT
+    EDU_SEQ      AS eduSeq,
+    SEQ          AS seq,
+    SCHOOL_NAME  AS schoolName,
+    DIVISION     AS division,
+    START_PERIOD AS startPeriod,
+    END_PERIOD   AS endPeriod,
+    MAJOR        AS major,
+    GRADE        AS grade,
+    LOCATION     AS location
+  FROM EDUCATION
+  WHERE SEQ = #{seq}
+  ORDER BY START_PERIOD
+</select>
+
+<select id="selectCareers" parameterType="long" resultType="com.spring.board.vo.CereerVo">
+  SELECT
+    CAR_SEQ      AS carSeq,
+    SEQ          AS seq,
+    COMP_NAME    AS compName,
+    LOCATION     AS location,
+    START_PERIOD AS startPeriod,
+    END_PERIOD   AS endPeriod,
+    TASK         AS task,
+    SALARY       AS salary
+  FROM CAREER
+  WHERE SEQ = #{seq}
+  ORDER BY START_PERIOD
+</select>
+
+<select id="selectCertificates" parameterType="long" resultType="com.spring.board.vo.CertificateVo">
+  SELECT
+    CERT_SEQ      AS certSeq,
+    SEQ           AS seq,
+    QUALIFI_NAME  AS qualifiName,
+    ACQU_DATE     AS acquDate,
+    ORGANIZE_NAME AS organizeName
+  FROM CERTIFICATE
+  WHERE SEQ = #{seq}
+  ORDER BY ACQU_DATE
+</select>
+
+<!-- 자식 삭제 -->
+<delete id="deleteEducationBySeq" parameterType="long">
+  DELETE FROM EDUCATION WHERE SEQ = #{seq}
+</delete>
+<delete id="deleteCareerBySeq" parameterType="long">
+  DELETE FROM CAREER WHERE SEQ = #{seq}
+</delete>
+<delete id="deleteCertificateBySeq" parameterType="long">
+  DELETE FROM CERTIFICATE WHERE SEQ = #{seq}
+</delete>
+
+<!-- 자식 일괄 삽입 -->
+  <insert id="insertEducationList" parameterType="map">
+    <foreach collection="list" item="e">
+      INSERT INTO EDUCATION
+        (EDU_SEQ, SEQ, SCHOOL_NAME, DIVISION, START_PERIOD, END_PERIOD, MAJOR, GRADE, LOCATION)
+      VALUES
+        (EDUCATION_SEQ.NEXTVAL, #{seq}, #{e.schoolName}, #{e.division},
+         #{e.startPeriod}, #{e.endPeriod}, #{e.major}, #{e.grade}, #{e.location})
+    </foreach>
+  </insert>
+  
+<insert id="insertCertificateList" parameterType="map">
+  <foreach collection="list" item="x">
+    INSERT INTO CERTIFICATE
+      (CERT_SEQ, SEQ, QUALIFI_NAME, ACQU_DATE, ORGANIZE_NAME)
+    VALUES
+      (CERT_SEQ.NEXTVAL,
+       #{seq}, #{x.qualifiName}, #{x.acquDate}, #{x.organizeName})
+  </foreach>
+</insert>
+
+<!-- 정말 최소 버전: salary 제거, 바깥 seq 사용, jdbcType도 생략 -->
+<insert id="insertCareerList" parameterType="map">
+  <foreach collection="list" item="c" separator=";">
+    INSERT INTO CAREER
+      (CAR_SEQ, SEQ, COMP_NAME, LOCATION, START_PERIOD, END_PERIOD, TASK)
+    VALUES
+      (CAREER_SEQ.NEXTVAL,
+       #{seq},
+       #{c.compName},
+       #{c.location},
+       #{c.startPeriod},
+       #{c.endPeriod},
+       #{c.task})
+  </foreach>
+</insert>
+
+
+
+
+</mapper>

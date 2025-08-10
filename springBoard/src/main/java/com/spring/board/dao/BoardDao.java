@@ -1,6 +1,7 @@
 package com.spring.board.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.spring.board.vo.BoardVo;
 import com.spring.board.vo.CodeVo;
@@ -24,5 +25,7 @@ public interface BoardDao {
 	
 	public List<BoardVo> selectMbtiList(BoardVo boardVo);
 
-	public List<BoardVo> checkBoxResult(List<String> types);
+//	public List<BoardVo> checkBoxResult(List<String> types);
+	
+	public List<BoardVo> checkBoxResult(PageVo pageVo);
 }

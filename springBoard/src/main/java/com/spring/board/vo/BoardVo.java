@@ -12,8 +12,8 @@ public class BoardVo extends PageVo {
 	private String	modifier;
 	private int totalCnt;
 	
-	private String boardTypeName;
-	
+//	private String boardTypeName;
+//	
 //	private List<String> boardTypeList;
 	
 	
@@ -62,19 +62,19 @@ public class BoardVo extends PageVo {
 	
 	
 	
-	public String getboardTypeName() {
-		return boardTypeName;
-	}
-	public void setboardTypeName(String boardTypeName) {
-		this.boardTypeName = boardTypeName;
-	}
-	
+//	public String getboardTypeName() {
+//		return boardTypeName;
+//	}
+//	public void setboardTypeName(String boardTypeName) {
+//		this.boardTypeName = boardTypeName;
+//	}
+//	
 //
-//	public List<String> getBoardTypeList() {
+//	public List<String> getboardTypeList() {
 //	    return boardTypeList;
 //	}
 //
-//	public void setBoardTypeList(List<String> boardTypeList) {
+//	public void setboardTypeList(List<String> boardTypeList) {
 //	    this.boardTypeList = boardTypeList;
 //	}
 
