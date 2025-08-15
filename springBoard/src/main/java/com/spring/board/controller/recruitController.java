@@ -89,7 +89,9 @@ public class recruitController {
    
    @RequestMapping(value="/recruit/apply.do", method=RequestMethod.POST)
    @Transactional
-   public String apply(@RequestParam String action,
+   public String apply(
+		   			   Model model,
+		   			   @RequestParam String action,
                        @ModelAttribute RecruitVo recruit,
                        @RequestParam(required=false) List<String> eduStart,
                        @RequestParam(required=false) List<String> eduEnd,
@@ -108,15 +110,29 @@ public class recruitController {
                        @RequestParam(required=false) List<String> organizeName) {
 
        boolean submit = "SUBMIT".equalsIgnoreCase(action);
+       
        recruitService.updateRecruit(recruit, submit);
 
        Long seq = recruit.getSeq();
-       recruitService.replaceEducations(seq,  packEducations(seq, eduStart, eduEnd, eduDivision, schoolName, eduLocation, major, grade));
-       recruitService.replaceCareers(seq,     packCareers(seq, carStart, carEnd, compName, task, carLocation));
-       recruitService.replaceCertificates(seq, packCertificates(seq, qualifiName, acquDate, organizeName));
-
-       // 메시지 없이 로그인 화면으로
-       return "redirect:/recruit/loginScreeen.do";
+       if (!submit) {
+           recruitService.replaceEducations(seq,  packEducations(seq, eduStart, eduEnd, eduDivision, schoolName, eduLocation, major, grade));
+           recruitService.replaceCareers(seq,     packCareers(seq, carStart, carEnd, compName, task, carLocation));
+           recruitService.replaceCertificates(seq, packCertificates(seq, qualifiName, acquDate, organizeName));
+       }
+       
+       System.out.println(submit + "액션에는 서브밋이 들어가 있냐???");
+       System.out.println(submit + "액션에는 세이브가 들어가 있냐???");
+       
+       String encName="";
+       String encPhone="";
+	try {
+		encName = UriUtils.encodeQueryParam(recruit.getName(),  "UTF-8");
+		encPhone = UriUtils.encodeQueryParam(recruit.getPhone(), "UTF-8");
+	} catch (UnsupportedEncodingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+       return "redirect:/recruit/main.do?name=" + encName + "&phone=" + encPhone;
    }
 
 

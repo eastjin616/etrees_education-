@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +8,6 @@
 <title>입사 지원</title>
 
 <style>
-/* 기존 <style> 내용 그대로 */
 body {
 	font-family: Arial, sans-serif;
 	display: flex;
@@ -109,9 +109,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <td class="text-center"><input type="checkbox" class="rowCheck"></td>
       <td>
         <table class="w-100">
-          <tr><td class="no-border p0 pb4"><input type="text" name="eduStart" placeholder="2013.02" required></td></tr>
-          <tr><td class="no-border p0 text-center">~</td></tr>
-          <tr><td class="no-border p0"><input type="text" name="eduEnd" placeholder="2019.10" required></td></tr>
+          <tr><td><input type="text" name="eduStart" placeholder="2013.02" required></td></tr>
+          <tr><td>~</td></tr>
+          <tr><td><input type="text" name="eduEnd" placeholder="2019.10" required></td></tr>
         </table>
       </td>
       <td>
@@ -123,8 +123,8 @@ document.addEventListener("DOMContentLoaded", function () {
       </td>
       <td>
         <table class="w-100">
-          <tr><td class="no-border p0 pb4"><input type="text" name="schoolName" placeholder="학교명"></td></tr>
-          <tr><td class="no-border p0">
+          <tr><td><input type="text" name="schoolName" placeholder="학교명"></td></tr>
+          <tr><td>
             <select name="eduLocation" required>
               <option>전국</option>
             </select>
@@ -156,9 +156,9 @@ document.addEventListener("DOMContentLoaded", function () {
       <td class="text-center"><input type="checkbox" class="rowCheck"></td>
       <td>
         <table class="w-100">
-          <tr><td class="no-border p0 pb4"><input type="text" name="startPeriod" placeholder="2013.02"></td></tr>
-          <tr><td class="no-border p0 text-center">~</td></tr>
-          <tr><td class="no-border p0"><input type="text" name="endPeriod" placeholder="2019.10"></td></tr>
+          <tr><td><input type="text" name="startPeriod" placeholder="2013.02"></td></tr>
+          <tr><td>~</td></tr>
+          <tr><td><input type="text" name="endPeriod" placeholder="2019.10"></td></tr>
         </table>
       </td>
       <td><input type="text" name="compName" placeholder="회사명"></td>
@@ -250,7 +250,31 @@ document.addEventListener("DOMContentLoaded", function () {
         </tr>
       </table>
     </div>
+   
+    <c:set var="locked" value="${recruit.submit eq 'Y' or recruit.submitted == 1}" />
+	<c:set var="dis"     value="${locked ? 'disabled' : ''}" />
+	
+  <c:if test="${param.action eq 'SUBMIT' and not empty eduList}"> 
+  
 
+  	  <table border="1" class="h-auto" style="text-align: center; margin:auto; margin-top:10px">
+	    <tr>
+	      <td>학력사항</td>
+	      <td>경력사항</td>
+	      <td>희망연봉</td>
+	      <td>희망근무지/근무형태</td>
+	    </tr>
+	    <tr>
+	      <td><input type="text" name="schoolName"
+	      value="<c:forEach var='e' items='${eduList}' varStatus='s'>${e.schoolName}<c:if test='${!s.last}'>, </c:if></c:forEach>"></td>
+	      <td>경력 3년 8개월</td>
+	      <td>회사내규에 따름</td>
+	      <td>서울전체 / 정규직</td>
+	    </tr>
+	  </table>
+	</c:if>
+ 
+<c:set var="locked" value="${e.action eq 'SUBMIT'}" />
     <!-- 학력 -->
     <div class="section">
       <div class="section-header">
@@ -262,7 +286,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
 
       <div class="placeholder-box h-auto">
-        <table id="eduTable" border="1" class="m-auto w-100">
+        <table id="eduTable" border="1" class="m-auto w-100" >
           <thead>
             <tr>
               <td class="w-30px"></td>
@@ -285,17 +309,17 @@ document.addEventListener("DOMContentLoaded", function () {
                   </table>
                 </td>
                 <td>
-                  <select name="eduDivision" class="w-100" required>
-                    <option value="졸업" ${e.division eq '재학' ? 'selected="selected"' : ''}>재학</option>
-                    <option value="재학" ${e.division eq '중퇴' ? 'selected="selected"' : ''}>중퇴</option>
-                    <option value="휴학" ${e.division eq '졸업' ? 'selected="selected"' : ''}>졸업</option>
+                  <select name="eduDivision" class="w-100" required ${locked ? 'disabled' : ''}>
+                    <option value="재학" ${e.division eq '재학' ? 'selected="selected"' : ''}, >재학</option>
+                    <option value="중퇴" ${e.division eq '중퇴' ? 'selected="selected"' : ''}>중퇴</option>
+                    <option value="졸업" ${e.division eq '졸업' ? 'selected="selected"' : ''}>졸업</option>
                   </select>
                 </td>
                 <td>
                   <table class="w-100">
-                    <tr><td class="no-border p0 pb4"><input type="text" name="schoolName" value="${e.schoolName}"></td></tr>
-                    <tr><td class="no-border p0">
-                      <select name="eduLocation" required>
+                    <tr><td><input type="text" name="schoolName" value="${e.schoolName}" required ${locked ? 'disabled' : ''}></td></tr>
+                    <tr><td>
+                      <select name="eduLocation" required ${locked ? 'disabled' : ''} >
                         <option ${e.location eq '전국' ? 'selected="selected"' : ''}>전국</option>
                       </select>
                     </td></tr>
@@ -309,6 +333,8 @@ document.addEventListener("DOMContentLoaded", function () {
         </table>
       </div>
     </div>
+
+
 
     <!-- 경력 -->
     <div class="section">

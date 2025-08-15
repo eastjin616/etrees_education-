@@ -33,7 +33,8 @@ public class recruitServiceImpl implements recruitService{
       return recruitDao.findByNameAndPhone(param);
    }
    
-   
+
+//   =========================================================
    
    @Override
    public void updateRecruit(RecruitVo r, boolean submit) {
@@ -48,7 +49,15 @@ public class recruitServiceImpl implements recruitService{
        p.put("hopeArea",  r.getHopeArea());
        p.put("jobType",   r.getJobType());
        p.put("submit",    submit ? "Y" : "N");
-       recruitDao.updateRecruit(p);
+       
+       System.out.println(submit + "여기는 섭스 임풀인데유");
+       
+       if(submit == true) {
+    	   recruitDao.submitRecruit(p);
+       }else {
+    	   recruitDao.updateRecruit(p);
+       }
+       
    }
 
    @Override
@@ -65,6 +74,9 @@ public class recruitServiceImpl implements recruitService{
    public List<CertificateVo> selectCertificates(Long seq) {
        return recruitDao.selectCertificates(seq);
    }
+   
+   
+
 
    @Override
    @Transactional

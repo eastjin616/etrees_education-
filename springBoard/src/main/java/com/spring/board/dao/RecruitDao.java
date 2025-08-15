@@ -20,6 +20,7 @@ public interface RecruitDao {
    RecruitVo findByNameAndPhone(Map<String, Object> param );
    
    int updateRecruit(Map<String, Object> param);
+   int submitRecruit(Map<String, Object> param);
 
    // 조회
    List<EducationVo>  selectEducations(Long seq);

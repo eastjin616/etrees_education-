@@ -25,9 +25,12 @@ public interface recruitService {
    List<CereerVo>     selectCareers(Long seq);
    List<CertificateVo> selectCertificates(Long seq);
 
-   // 자식 교체(삭제 후 일괄 insert)
+   // 삭제 후 일괄 insert
    void replaceEducations(Long seq, List<EducationVo> list);
    void replaceCareers(Long seq, List<CereerVo> list);
    void replaceCertificates(Long seq, List<CertificateVo> list);
+   
+   //서브밋 제출
+   
    
 }

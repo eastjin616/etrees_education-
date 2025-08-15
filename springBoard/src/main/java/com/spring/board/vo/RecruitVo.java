@@ -15,6 +15,9 @@ public class RecruitVo  {
     private String hopeArea;
     private String jobType;
     
+    private String submit;     // 'Y' / 'N'
+    private Integer submitted; // 1 / 0
+    
     private List<EducationVo> educationList = new ArrayList<>();
     private List<CereerVo> careerList = new ArrayList<>();
     private List<CertificateVo> certificateList = new ArrayList<>();
@@ -90,6 +93,10 @@ public class RecruitVo  {
 	public void setCertificateList(List<CertificateVo> certificateList) {
 		this.certificateList = certificateList;
 	}
+	
+	 public boolean isSubmitted() {
+	        return "Y".equalsIgnoreCase(submit) || (submitted != null && submitted == 1);
+	    }
     
 	
 

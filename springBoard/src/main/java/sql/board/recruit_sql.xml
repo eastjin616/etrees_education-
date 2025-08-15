@@ -24,31 +24,24 @@
 
   
 <select id="findByNameAndPhone" parameterType="map" resultType="com.spring.board.vo.RecruitVo">
-  SELECT SEQ, NAME, BIRTH, GENDER, PHONE, EMAIL,
-         ADDR AS address,
-         LOCATION AS hopeArea,
-         WORK_TYPE AS jobType
+  SELECT 
+         SEQ,
+         NAME,
+         BIRTH,
+         GENDER,
+         PHONE,
+         EMAIL,
+         ADDR      AS address,
+         LOCATION  AS hopeArea,
+         WORK_TYPE AS jobType,
+         SUBMIT    AS submit,              -- 'Y'/'N'
+         CASE WHEN SUBMIT = 'Y' THEN 1 ELSE 0 END AS submitted  -- 1/0
   FROM RECRUIT
-  WHERE NAME = #{name}
+  WHERE NAME  = #{name}
     AND PHONE = #{phone}
 </select>
 
 
-
-<!-- 부모 업데이트 : parameterType=map (submit 포함) -->
-<update id="updateRecruit" parameterType="map">
-  UPDATE RECRUIT
-     SET NAME      = #{name},
-         BIRTH     = #{birth},
-         GENDER    = #{gender},
-         PHONE     = #{phone},
-         EMAIL     = #{email},
-         ADDR      = #{address},
-         LOCATION  = #{hopeArea},
-         WORK_TYPE = #{jobType},
-         SUBMIT    = #{submit}
-   WHERE SEQ = #{seq}
-</update>
 
 <!-- 자식 조회 (컬럼 alias로 VO 프로퍼티와 1:1 매칭) -->
 <select id="selectEducations" parameterType="long" resultType="com.spring.board.vo.EducationVo">
@@ -94,6 +87,38 @@
   ORDER BY ACQU_DATE
 </select>
 
+
+
+<!-- 부모 업데이트 : parameterType=map (submit 포함) -->
+<update id="updateRecruit" parameterType="map">
+  UPDATE RECRUIT
+     SET NAME      = #{name},
+         BIRTH     = #{birth},
+         GENDER    = #{gender},
+         PHONE     = #{phone},
+         EMAIL     = #{email},
+         ADDR      = #{address},
+         LOCATION  = #{hopeArea},
+         WORK_TYPE = #{jobType},
+         SUBMIT    = #{submit}
+   WHERE SEQ = #{seq}
+</update>
+
+<update id="submitRecruit" parameterType="map">
+  UPDATE RECRUIT
+     SET SUBMIT   = 'Y',
+         NAME      = #{name},
+         BIRTH     = #{birth},
+         GENDER    = #{gender},
+         PHONE     = #{phone},
+         EMAIL     = #{email},
+         ADDR      = #{address},
+         LOCATION  = #{hopeArea},
+         WORK_TYPE = #{jobType}
+   WHERE SEQ = #{seq}
+</update>
+
+
 <!-- 자식 삭제 -->
 <delete id="deleteEducationBySeq" parameterType="long">
   DELETE FROM EDUCATION WHERE SEQ = #{seq}
@@ -128,7 +153,7 @@
 
 <!-- 정말 최소 버전: salary 제거, 바깥 seq 사용, jdbcType도 생략 -->
 <insert id="insertCareerList" parameterType="map">
-  <foreach collection="list" item="c" separator=";">
+  <foreach collection="list" item="c">
     INSERT INTO CAREER
       (CAR_SEQ, SEQ, COMP_NAME, LOCATION, START_PERIOD, END_PERIOD, TASK)
     VALUES
@@ -141,8 +166,5 @@
        #{c.task})
   </foreach>
 </insert>
-
-
-
 
 </mapper>

@@ -41,7 +41,14 @@ public class RecruitDaoImpl implements RecruitDao{
    
    @Override
    public int updateRecruit(Map<String, Object> param) {
+	   
        return sqlSession.update("recruit.updateRecruit", param);
+   }
+   
+   @Override
+   public int submitRecruit(Map<String, Object> param) {
+   	// TODO Auto-generated method stub
+	   return sqlSession.update("recruit.submitRecruit", param);
    }
 
    @Override
@@ -58,6 +65,8 @@ public class RecruitDaoImpl implements RecruitDao{
    public List<CertificateVo> selectCertificates(Long seq) {
        return sqlSession.selectList("recruit.selectCertificates", seq);
    }
+   
+   
 
    @Override
    public int deleteEducationBySeq(Long seq) {
@@ -73,6 +82,8 @@ public class RecruitDaoImpl implements RecruitDao{
    public int deleteCertificateBySeq(Long seq) {
        return sqlSession.delete("recruit.deleteCertificateBySeq", seq);
    }
+   
+   
 
    @Override
    public int insertEducationList(Long seq, List<EducationVo> list) {
@@ -97,5 +108,7 @@ public class RecruitDaoImpl implements RecruitDao{
        p.put("list", list);
        return sqlSession.insert("recruit.insertCertificateList", p);
    }
+
+
 
 }
